@@ -30,6 +30,11 @@ public class CustomerResource {
         this.customerService = customerService;
     }
 
+    @GetMapping("/hellow")
+    public ResponseEntity<String> sayHellow() {
+        return ResponseEntity.ok("say Hellow");
+    }
+
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.findAll());

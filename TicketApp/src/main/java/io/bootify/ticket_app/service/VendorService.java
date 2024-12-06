@@ -3,6 +3,7 @@ package io.bootify.ticket_app.service;
 import io.bootify.ticket_app.domain.SystemConfig;
 import io.bootify.ticket_app.domain.Ticket;
 import io.bootify.ticket_app.domain.Vendor;
+import io.bootify.ticket_app.model.SystemDTO;
 import io.bootify.ticket_app.model.VendorDTO;
 import io.bootify.ticket_app.repos.SystemConfigRepository;
 import io.bootify.ticket_app.repos.TicketRepository;
@@ -42,17 +43,28 @@ public class VendorService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final VendorDTO vendorDTO) {
-        final Vendor vendor = new Vendor();
-        mapToEntity(vendorDTO, vendor);
-        return vendorRepository.save(vendor).getId();
+    public VendorDTO create(final VendorDTO vendorDTO) {
+       final Vendor vendor = new Vendor();
+    Vendor vendor1 =    mapToEntity(vendorDTO,  vendor);
+       // return vendorRepository.save(vendor).getId();
+    return  mapToDTO(vendorRepository.save(vendor1) , new VendorDTO() ) ;
+
+
     }
 
-    public void update(final Long id, final VendorDTO vendorDTO) {
+    public void update(final Long id, final SystemDTO systemDTO) {
         final Vendor vendor = vendorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(vendorDTO, vendor);
+        SystemConfig systemConfig = new SystemConfig();
+        systemConfig.setCustomerRetrievalRate(systemDTO.getCustomerRetrievalRate());
+        systemConfig.setTotalTickets(systemDTO.getTotalTickets());
+        systemConfig.setMaxTicketCapacity(systemDTO.getMaxTicketCapacity());
+        systemConfig.setTicketReleaseRate(systemDTO.getTicketReleaseRate());
+        SystemConfig systemConfig1 = systemConfigRepository.save(systemConfig);
+        vendor.setSystemConfigId(systemConfig1);
         vendorRepository.save(vendor);
+
+
     }
 
     public void delete(final Long id) {
