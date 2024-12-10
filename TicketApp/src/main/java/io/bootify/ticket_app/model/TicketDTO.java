@@ -16,8 +16,7 @@ public class TicketDTO {
     @TicketNumberUnique
     private Integer number;
 
-    @JsonProperty("isSold")
-    private Boolean isSold;
+
 
     private Long vendorId;
 

@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-    @AllArgsConstructor
+@AllArgsConstructor
 public class CustomerConfigDTO {
 
     private Long id;
@@ -14,6 +14,6 @@ public class CustomerConfigDTO {
     @NonNull
     private Integer customerRetrievalRate;
 
-
+    private Integer maxTicketCapacity;
 
 }

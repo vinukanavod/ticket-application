@@ -58,6 +58,7 @@ public class CustomerService {
 
          CustomConfig customConfig = new CustomConfig();
          customConfig.setCustomerRetrievalRate(customerConfigDTO.getCustomerRetrievalRate());
+         customConfig.setMaxTicketCapacity(customerConfigDTO.getMaxTicketCapacity());
          customConfig.setCustomer( customer);
          CustomConfig   customConfig1 =  customerConfigRepository.save(customConfig);
 

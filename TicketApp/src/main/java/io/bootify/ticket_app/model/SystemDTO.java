@@ -13,17 +13,17 @@ public class SystemDTO {
 
     private Long id;
 
-    @NonNull
+
     private Integer totalTickets;
 
-    @NonNull
+
     private Integer ticketReleaseRate;
 
-    @NonNull
-    private Integer customerRetrievalRate;
 
-    @NonNull
-    private Integer maxTicketCapacity;
+//    private Integer customerRetrievalRate;
+
+
+//    private Integer maxTicketCapacity;
 
 
     private Vendor vendor;

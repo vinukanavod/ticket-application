@@ -33,8 +33,7 @@ public class Ticket {
     @Column(nullable = false, unique = true)
     private Integer number;
 
-    @Column(columnDefinition = "tinyint", length = 1)
-    private Boolean isSold;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id_id")

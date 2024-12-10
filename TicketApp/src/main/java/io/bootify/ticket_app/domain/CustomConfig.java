@@ -20,6 +20,8 @@ class CustomConfig {
 
     @Column
     private Integer customerRetrievalRate;
+    @Column
+    private Integer maxTicketCapacity;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id" , referencedColumnName = "id")

@@ -35,11 +35,11 @@ public class SystemConfig {
     @Column
     private Integer ticketReleaseRate;
 
-    @Column
-    private Integer customerRetrievalRate;
+//    @Column
+//    private Integer customerRetrievalRate;
 
-    @Column
-    private Integer maxTicketCapacity;
+//    @Column
+//    private Integer maxTicketCapacity;
 
     @OneToOne(
             mappedBy = "systemConfigId",
