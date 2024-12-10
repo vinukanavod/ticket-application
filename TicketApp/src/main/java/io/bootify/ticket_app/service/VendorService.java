@@ -62,6 +62,7 @@ public class VendorService {
         systemConfig.setTicketReleaseRate(systemDTO.getTicketReleaseRate());
         SystemConfig systemConfig1 = systemConfigRepository.save(systemConfig);
         vendor.setSystemConfigId(systemConfig1);
+        System.out.println(vendor);
         vendorRepository.save(vendor);
 
 
