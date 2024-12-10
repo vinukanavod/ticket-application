@@ -1,5 +1,6 @@
 package io.bootify.ticket_app.rest;
 
+import io.bootify.ticket_app.model.CustomerConfigDTO;
 import io.bootify.ticket_app.model.CustomerDTO;
 import io.bootify.ticket_app.service.CustomerService;
 import io.bootify.ticket_app.util.ReferencedException;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.DefaultEditorKit;
+
 
 @RestController
 @RequestMapping(value = "/api/customers", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,10 +35,10 @@ public class CustomerResource {
 
     @GetMapping("/hellow")
     public ResponseEntity<String> sayHellow() {
-        return ResponseEntity.ok("say Hellow");
+        return ResponseEntity.ok("say Hellow baby");
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.findAll());
     }
@@ -45,18 +48,18 @@ public class CustomerResource {
         return ResponseEntity.ok(customerService.get(id));
     }
 
-    @PostMapping
+    @PostMapping("/save")
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createCustomer(@RequestBody @Valid final CustomerDTO customerDTO) {
-        final Long createdId = customerService.create(customerDTO);
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody @Valid final CustomerDTO customerDTO) {
+        final CustomerDTO customerDTO1 = customerService.create(customerDTO);
+        return new ResponseEntity<>(customerDTO1, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Long> updateCustomer(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final CustomerDTO customerDTO) {
-        customerService.update(id, customerDTO);
-        return ResponseEntity.ok(id);
+    @PutMapping("edit/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable(name = "id") final Long id,
+                                                                     @RequestBody @Valid final CustomerConfigDTO customerConfigDTO) {
+
+        return ResponseEntity.ok(customerService.update(id, customerConfigDTO));
     }
 
     @DeleteMapping("/{id}")

@@ -38,7 +38,12 @@ public class TicketResource {
         return ResponseEntity.ok(ticketService.get(id));
     }
 
-    @PostMapping
+    @PutMapping("addticket/{id}")
+    public ResponseEntity<Integer> ticketAdd(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(ticketService.TicketAdd(id));
+    }
+
+    @PostMapping("/save")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createTicket(@RequestBody @Valid final TicketDTO ticketDTO) {
         final Long createdId = ticketService.create(ticketDTO);

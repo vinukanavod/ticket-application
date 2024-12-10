@@ -56,12 +56,13 @@ public class VendorService {
         final Vendor vendor = vendorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         SystemConfig systemConfig = new SystemConfig();
-        systemConfig.setCustomerRetrievalRate(systemDTO.getCustomerRetrievalRate());
+//        systemConfig.setCustomerRetrievalRate(systemDTO.getCustomerRetrievalRate());
         systemConfig.setTotalTickets(systemDTO.getTotalTickets());
-        systemConfig.setMaxTicketCapacity(systemDTO.getMaxTicketCapacity());
+//        systemConfig.setMaxTicketCapacity(systemDTO.getMaxTicketCapacity());
         systemConfig.setTicketReleaseRate(systemDTO.getTicketReleaseRate());
         SystemConfig systemConfig1 = systemConfigRepository.save(systemConfig);
         vendor.setSystemConfigId(systemConfig1);
+        System.out.println(vendor);
         vendorRepository.save(vendor);
 
 

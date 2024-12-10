@@ -40,9 +40,22 @@ public class TicketService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Integer TicketAdd(final Long id) {
+        final Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+
+           ticket.setNumber(500);
+           ticketRepository.save(ticket);
+        return 1 ;
+
+
+
+    }
+
     public Long create(final TicketDTO ticketDTO) {
         final Ticket ticket = new Ticket();
         mapToEntity(ticketDTO, ticket);
+
         return ticketRepository.save(ticket).getId();
     }
 
@@ -60,7 +73,7 @@ public class TicketService {
     private TicketDTO mapToDTO(final Ticket ticket, final TicketDTO ticketDTO) {
         ticketDTO.setId(ticket.getId());
         ticketDTO.setNumber(ticket.getNumber());
-        ticketDTO.setIsSold(ticket.getIsSold());
+
         ticketDTO.setVendorId(ticket.getVendorId() == null ? null : ticket.getVendorId().getId());
         ticketDTO.setCustomerId(ticket.getCustomerId() == null ? null : ticket.getCustomerId().getId());
         return ticketDTO;
@@ -68,7 +81,7 @@ public class TicketService {
 
     private Ticket mapToEntity(final TicketDTO ticketDTO, final Ticket ticket) {
         ticket.setNumber(ticketDTO.getNumber());
-        ticket.setIsSold(ticketDTO.getIsSold());
+
         final Vendor vendorId = ticketDTO.getVendorId() == null ? null : vendorRepository.findById(ticketDTO.getVendorId())
                 .orElseThrow(() -> new NotFoundException("vendorId not found"));
         ticket.setVendorId(vendorId);

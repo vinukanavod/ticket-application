@@ -31,7 +31,7 @@ public class VendorResource {
         this.vendorService = vendorService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<VendorDTO>> getAllVendors() {
         return ResponseEntity.ok(vendorService.findAll());
     }
