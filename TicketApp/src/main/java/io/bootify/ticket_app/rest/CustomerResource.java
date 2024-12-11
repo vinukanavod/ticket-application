@@ -1,13 +1,14 @@
 package io.bootify.ticket_app.rest;
 
-import io.bootify.ticket_app.model.CustomerConfigDTO;
 import io.bootify.ticket_app.model.CustomerDTO;
 import io.bootify.ticket_app.service.CustomerService;
 import io.bootify.ticket_app.util.ReferencedException;
 import io.bootify.ticket_app.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.text.DefaultEditorKit;
-
 
 @RestController
 @RequestMapping(value = "/api/customers", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,11 +30,6 @@ public class CustomerResource {
 
     public CustomerResource(final CustomerService customerService) {
         this.customerService = customerService;
-    }
-
-    @GetMapping("/hellow")
-    public ResponseEntity<String> sayHellow() {
-        return ResponseEntity.ok("say Hellow baby");
     }
 
     @GetMapping("/all")
@@ -57,9 +51,9 @@ public class CustomerResource {
 
     @PutMapping("edit/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable(name = "id") final Long id,
-                                                                     @RequestBody @Valid final CustomerConfigDTO customerConfigDTO) {
+                                                      @RequestBody @Valid final CustomerDTO customerDTO) {
 
-        return ResponseEntity.ok(customerService.update(id, customerConfigDTO));
+        return ResponseEntity.ok(customerService.update(id, customerDTO));
     }
 
     @DeleteMapping("/{id}")

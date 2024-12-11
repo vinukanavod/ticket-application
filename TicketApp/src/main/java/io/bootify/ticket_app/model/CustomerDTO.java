@@ -1,7 +1,5 @@
 package io.bootify.ticket_app.model;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +13,12 @@ public class CustomerDTO {
 
     private Long id;
 
-    @NotNull
-    @Size(max = 255)
     private String name;
 
+    private Integer totalTickets;
+
     private Integer customerRetrievalRate;
-    private CustomerConfigDTO customerConfigDTO;
+
+    private Integer maxTicketCapacity;
 
 }

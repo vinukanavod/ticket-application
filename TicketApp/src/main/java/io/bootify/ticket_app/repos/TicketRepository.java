@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
@@ -16,7 +14,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     Ticket findFirstByCustomerId(Customer customer);
 
-    boolean existsByNumber(Integer number);
+    @Query("SELECT t FROM Ticket t WHERE t.vendorId = :vendor AND t.customerId = :customer")
+    Ticket findByVendorAndCustomer(@Param("vendor") Vendor vendor, @Param("customer") Customer customer);
 
+    @Query("SELECT sum(t.count) FROM Ticket t WHERE t.vendorId = :vendor")
+    Integer findTicketsByVendor(@Param("vendor") Vendor vendor);
 
 }

@@ -3,18 +3,16 @@ package io.bootify.ticket_app.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 import java.time.OffsetDateTime;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,10 +23,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vendor {
 
+    public Vendor(String name) {
+        this.name = name;
+    }
+
     @Id
-   // @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -38,9 +42,14 @@ public class Vendor {
     @OneToMany(mappedBy = "vendorId")
     private Set<Ticket> tickets;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "system_config_id_id", unique = true)
-    private SystemConfig systemConfigId;
+    @Column
+    private Integer totalTickets;
+
+    @Column
+    private Integer ticketReleaseRate;
+
+    @Column
+    private Integer maxTicketCapacity;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

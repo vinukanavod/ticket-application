@@ -1,6 +1,5 @@
 package io.bootify.ticket_app.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -24,6 +23,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 public class Customer {
 
+    public Customer(String name) {
+        this.name = name;
+    }
+
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +38,15 @@ public class Customer {
     @OneToMany(mappedBy = "customerId")
     private Set<Ticket> tickets;
 
+    @Column
+    private Integer totalTickets;
+
+    @Column
+    private Integer customerRetrievalRate;
+
+    @Column
+    private Integer maxTicketCapacity;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -42,8 +54,5 @@ public class Customer {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
-
-    @OneToOne(cascade = CascadeType.ALL , mappedBy = "customer" , fetch = FetchType.LAZY)
-    private  CustomConfig customConfig;
 
 }

@@ -1,6 +1,5 @@
 package io.bootify.ticket_app.rest;
 
-import io.bootify.ticket_app.model.SystemDTO;
 import io.bootify.ticket_app.model.VendorDTO;
 import io.bootify.ticket_app.service.VendorService;
 import io.bootify.ticket_app.util.ReferencedException;
@@ -48,10 +47,14 @@ public class VendorResource {
         return new ResponseEntity<>(vendorDTO1, HttpStatus.CREATED);
     }
 
-    @PutMapping("edit/{id}")
-    public ResponseEntity<Long> updateVendor(@PathVariable(name = "id") final Long id, @RequestBody @Valid final SystemDTO systemDTO) {
-        vendorService.update(id, systemDTO);
-        return ResponseEntity.ok(id);
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<VendorDTO> updateVendor(@PathVariable(name = "id") final Long id, @RequestBody @Valid final VendorDTO vendorDTO) {
+        return ResponseEntity.ok(vendorService.update(id, vendorDTO));
+    }
+
+    @GetMapping("/issue/{id}/{count}")
+    public ResponseEntity<VendorDTO> issueTickets(@PathVariable(name = "id") final Long id, @PathVariable(name = "count") final Integer count) {
+        return new ResponseEntity<>(vendorService.issueTickets(id, count), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

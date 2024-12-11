@@ -1,7 +1,5 @@
 package io.bootify.ticket_app.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,14 +10,14 @@ public class TicketDTO {
 
     private Long id;
 
-    @NotNull
-    @TicketNumberUnique
-    private Integer number;
-
-
-
     private Long vendorId;
 
+    private VendorDTO vendor;
+
     private Long customerId;
+
+    private CustomerDTO customer;
+
+    private Integer count;
 
 }

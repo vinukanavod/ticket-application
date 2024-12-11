@@ -8,91 +8,91 @@ import io.bootify.ticket_app.repos.CustomerRepository;
 import io.bootify.ticket_app.repos.TicketRepository;
 import io.bootify.ticket_app.repos.VendorRepository;
 import io.bootify.ticket_app.util.NotFoundException;
+
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final VendorRepository vendorRepository;
+    private final VendorService vendorService;
     private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
     public TicketService(final TicketRepository ticketRepository,
-            final VendorRepository vendorRepository, final CustomerRepository customerRepository) {
+                         final VendorRepository vendorRepository, VendorService vendorService,
+                         final CustomerRepository customerRepository, CustomerService customerService) {
         this.ticketRepository = ticketRepository;
         this.vendorRepository = vendorRepository;
+        this.vendorService = vendorService;
         this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
     public List<TicketDTO> findAll() {
         final List<Ticket> tickets = ticketRepository.findAll(Sort.by("id"));
         return tickets.stream()
-                .map(ticket -> mapToDTO(ticket, new TicketDTO()))
+                .map(this::mapToDTO)
                 .toList();
     }
 
     public TicketDTO get(final Long id) {
         return ticketRepository.findById(id)
-                .map(ticket -> mapToDTO(ticket, new TicketDTO()))
+                .map(this::mapToDTO)
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Integer TicketAdd(final Long id) {
-        final Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
+    public TicketDTO saveTicket(final TicketDTO ticketDTO) {
+        Customer customer = customerRepository.findById(ticketDTO.getCustomerId())
+                .orElseThrow(() -> new NotFoundException("Customer not found"));
 
-           ticket.setNumber(500);
-           ticketRepository.save(ticket);
-        return 1 ;
+        customerService.purchaseTickets(customer, ticketDTO.getCount());
 
+        Vendor vendor = vendorRepository.findById(ticketDTO.getVendorId())
+                .orElseThrow(() -> new NotFoundException("Vendor not found"));
 
+        Integer ticketsByVendor = ticketRepository.findTicketsByVendor(vendor);
+        if (ticketsByVendor + ticketDTO.getCount() > vendor.getMaxTicketCapacity()) {
+            throw new IllegalArgumentException("Vendor has reached max ticket capacity");
+        }
 
-    }
+        Ticket ticket = ticketRepository.findByVendorAndCustomer(vendor, customer);
 
-    public Long create(final TicketDTO ticketDTO) {
-        final Ticket ticket = new Ticket();
-        mapToEntity(ticketDTO, ticket);
+        if (ticket == null) {
+            ticket = new Ticket(vendor, customer, ticketDTO.getCount());
+        } else {
+            ticket.setCount(ticket.getCount() + ticketDTO.getCount());
+        }
 
-        return ticketRepository.save(ticket).getId();
-    }
+        ticketDTO.setId(ticketRepository.save(ticket).getId());
+        ticketDTO.setCustomer(customerService.mapToCustomerDTO(customer));
+        ticketDTO.setVendor(vendorService.mapToVendorDTO(vendor));
+        ticketDTO.setCount(ticket.getCount());
 
-    public void update(final Long id, final TicketDTO ticketDTO) {
-        final Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
-        mapToEntity(ticketDTO, ticket);
-        ticketRepository.save(ticket);
+        return ticketDTO;
     }
 
     public void delete(final Long id) {
         ticketRepository.deleteById(id);
     }
 
+    private TicketDTO mapToDTO(final Ticket ticket) {
+        return mapToDTO(ticket, new TicketDTO());
+    }
+
     private TicketDTO mapToDTO(final Ticket ticket, final TicketDTO ticketDTO) {
         ticketDTO.setId(ticket.getId());
-        ticketDTO.setNumber(ticket.getNumber());
-
         ticketDTO.setVendorId(ticket.getVendorId() == null ? null : ticket.getVendorId().getId());
         ticketDTO.setCustomerId(ticket.getCustomerId() == null ? null : ticket.getCustomerId().getId());
         return ticketDTO;
     }
 
-    private Ticket mapToEntity(final TicketDTO ticketDTO, final Ticket ticket) {
-        ticket.setNumber(ticketDTO.getNumber());
-
-        final Vendor vendorId = ticketDTO.getVendorId() == null ? null : vendorRepository.findById(ticketDTO.getVendorId())
-                .orElseThrow(() -> new NotFoundException("vendorId not found"));
-        ticket.setVendorId(vendorId);
-        final Customer customerId = ticketDTO.getCustomerId() == null ? null : customerRepository.findById(ticketDTO.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("customerId not found"));
-        ticket.setCustomerId(customerId);
-        return ticket;
-    }
-
     public boolean numberExists(final Integer number) {
-        return ticketRepository.existsByNumber(number);
+        return true;
     }
 
 }
